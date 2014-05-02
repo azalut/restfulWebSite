@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jQuery page</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <style>
+        #panel, #bar, #bar1, #panel1{
+            background-color: #7ab6c6;
+            text-align: center;
+            padding: 5px;
+        }
+        #panel, #panel1{
+            padding: 50px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<script>
+    $(document).ready(function(){
+        $("#bar").click(function(){
+            $("#panel").fadeToggle();
+        });
+    });
+</script>
+
+<div id="bar">Click me, user!</div>
+<div id="panel">Here I am!</div>
+<div id="bar1">Click me, user! I am bar 2.</div>
+<div id="panel1">Here I am! My name is panel1.</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JSON Parsing</title>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.0.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<script>
+    $(document).ready(function(){
+//        $.ajax({
+//            url: 'http://localhost:8080/main/users',
+//            method: "GET",
+//            success: (function(data){
+//                for(var i=0; i<Object.keys(data).length; i++){
+//                    $('#tekst').append('<tr><td>'+data[i].name+'</td><td>'+data[i].lastname+'</td></tr>');
+//                }
+//            }),
+//            error: (function(error) {
+//                console.log(error);
+//            })
+//        });
+
+        //THIS JSON IS EQUAL TO THE AJAX ABOVE
+        $.getJSON('http://localhost:8080/main/users', function(data){
+            for(var i=0; i<Object.keys(data).length; i++){
+                    $('#tekst').append('<tr><td>'+data[i].name+'</td><td>'+data[i].lastname+'</td></tr>');
+            }
+        });
+
+        $("#getByNameID").click(function(){
+            var nameOfTheUser = $("#IDimieGet").val();
+            $.ajax({
+                url: 'http://localhost:8080/main/users/' + nameOfTheUser,
+                type: "GET",
+                success: (function(data){
+                    if(data.name != undefined){
+                        $("#gettedUser").text(data.name + " " + data.lastname);
+                    }else{
+                        $("#gettedUser").text("There is no " + nameOfTheUser + " in the database.");
+                    }
+                }),
+                error: (function(){
+                    console.log(error);
+                })
+            });
+        });
+
+        $("#deleteByNameID").click(function(){
+            var nameOfUserToDelete = $('#IDImieDelete').val();
+            $.ajax({
+                url: 'http://localhost:8080/main/users/' + nameOfUserToDelete,
+                type: "DELETE",
+                success: (function(){
+                    $('#deletedUser').text('User' + nameOfUserToDelete + 'has been deleted.');
+                    location.reload();
+                }),
+                error: (function(error){
+                    console.log(error);
+                })
+            });
+        });
+
+        $('#putByNameID').click(function(){
+            var firstName = $('#IDImiePut').val();
+            var secondName = $('#IDImiePutExchange').val();
+            var dataObject = {
+                name: secondName,
+                lastname: "Tulaza"
+            };
+            $.ajax({
+                url: 'http://localhost:8080/main/users/' + firstName,
+                type: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify(dataObject),
+                success: (function(data){
+                    $('#puttedUser').text(data.name + " " + data.lastname);
+                }),
+                error: (function(xhr, error){
+                    console.log(error);
+                    console.log(xhr.responseText);
+                })
+            });
+        });
+
+        $('#postByNameID').click(function(){
+            var name = $('#IDImiePost').val();
+            var lastname = $('#IDNazwiskoPost').val();
+            var userObject = {
+                name: name,
+                lastname: lastname
+            };
+            $.ajax({
+                url: 'http://localhost:8080/main/users',
+                contentType: "application/json",
+                type: 'POST',
+                data: JSON.stringify(userObject),
+                success: (function(){
+                    $('#postedUser').text('User has been added.');
+                }),
+                error: (function(xhr, error){
+                    console.log(error);
+                    console.log(xhr);
+                })
+            });
+        });
+    });
+
+</script>
+<table id="tekst" border="1">
+
+</table>
+<br>
+
+<div>
+    <fieldset>
+        <legend>GET ONE USER</legend>
+        Podaj imie:<input type="text" id="IDimieGet"/>
+        <button id="getByNameID">Podaj według imienia:</button>
+        <div id="gettedUser"></div>
+    </fieldset>
+</div>
+
+<div>
+    <fieldset>
+        <legend>DELETE ONE USER</legend>
+        Podaj imie:<input type="text" id="IDImieDelete"/>
+        <button id="deleteByNameID">Usuń według imienia</button>
+        <div id="deletedUser"></div>
+    </fieldset>
+</div>
+
+<div>
+    <fieldset>
+        <legend>PUT ONE USER</legend>
+        Podaj imie:<input type="text" id="IDImiePut"/><br>
+        Podaj imie(nowe):<input type="text" id="IDImiePutExchange"/>
+        <button id="putByNameID">Edytuj według imienia</button>
+        <div id="puttedUser"></div>
+    </fieldset>
+</div>
+
+<div>
+    <fieldset>
+        <legend>POST USER</legend>
+        Podaj imie:<input type="text" id="IDImiePost"/><br>
+        Podaj nazwisko:<input type="text" id="IDNazwiskoPost"/>
+        <button id="postByNameID">Dodaj użytkownika</button>
+        <div id="postedUser"></div>
+    </fieldset>
+</div>
+
+
+
+</body>
+</html>
